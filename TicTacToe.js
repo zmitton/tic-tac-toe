@@ -1,22 +1,14 @@
 const readlineSync = require('./node_modules/readline-sync');
 
-
 let mainArray = [];
-let numberArray = [];
+let displayArray = [];
 
-for (let i = 1; i < 10; i++) {
+for (let i = 1; i <= 9; i++) {
     mainArray.push('');
-    numberArray.push(`${i}`);
+    displayArray.push(`${i}`);
 }
 
-function displayBoard(mainArray, numberArray) {
-
-    let displayArray = [];
-	
-    for (let i = 0; i < 9; i++) {
-        let element = (mainArray[i]) ? mainArray[i] : numberArray[i];
-        displayArray.push(element);
-    }
+function displayBoard(displayArray) {
 
 	console.log(' ' + displayArray[0] + ' | ' + displayArray[1] + ' | ' + displayArray[2] + ' ');
 	console.log('\u2014\u2014\u2014|\u2014\u2014\u2014|\u2014\u2014\u2014');
@@ -61,7 +53,7 @@ let winner = 0;
 
 for (let counter = 0; ; counter++) {
 
-	displayBoard(mainArray, numberArray);
+	displayBoard(displayArray);
 
     if (counter >= 5) { // there might be a winner
         winner = gameOverChecker(mainArray);
@@ -80,6 +72,7 @@ for (let counter = 0; ; counter++) {
 		num = parseInt(num, 10);
 		if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
 			mainArray[num - 1] = marker;
+            		displayArray[num - 1] = marker;
 			badInput = false;
 		} else {
 			console.log('You must enter an available number.');
