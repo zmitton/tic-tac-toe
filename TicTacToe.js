@@ -2,21 +2,16 @@ const readlineSync = require('./node_modules/readline-sync');
 
 
 let mainArray = ['', '', '', '', '', '', '', '', ''];
+let numberArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
+function displayBoard(mainArray, numberArray) {
 
-function displayBoard(mainArray) {
+    let displayArray = [];
 	
-	let square1 = (mainArray[0]) ? mainArray[0] : '1';
-	let square2 = (mainArray[1]) ? mainArray[1] : '2';
-	let square3 = (mainArray[2]) ? mainArray[2] : '3';
-	let square4 = (mainArray[3]) ? mainArray[3] : '4';
-	let square5 = (mainArray[4]) ? mainArray[4] : '5';
-	let square6 = (mainArray[5]) ? mainArray[5] : '6';
-	let square7 = (mainArray[6]) ? mainArray[6] : '7';
-	let square8 = (mainArray[7]) ? mainArray[7] : '8';
-	let square9 = (mainArray[8]) ? mainArray[8] : '9';
-
-	let displayArray = [square1, square2, square3, square4, square5, square6, square7, square8, square9];
+    for (let i = 0; i < 9; i++) {
+        let element = (mainArray[i]) ? mainArray[i] : numberArray[i];
+        displayArray.push(element);
+    }
 
 	console.log(' ' + displayArray[0] + ' | ' + displayArray[1] + ' | ' + displayArray[2] + ' ');
 	console.log('\u2014\u2014\u2014|\u2014\u2014\u2014|\u2014\u2014\u2014');
@@ -61,7 +56,7 @@ let winner = 0;
 
 for (let counter = 0; ;) {
 
-	displayBoard(mainArray);
+	displayBoard(mainArray, numberArray);
 
 	let playerTurn = (counter % 2 === 0) ? '1' : '2';
 	let marker = (playerTurn === '1') ? 'X' : 'O';
@@ -83,23 +78,12 @@ for (let counter = 0; ;) {
 	if (counter >= 5) { // there might be a winner
 		winner = gameOverChecker(mainArray);
 		if (winner !== 0) { // game is over
+            displayBoard(mainArray, numberArray);
 			break;
 		}
 	}
 }
 
+let winnerMsg = (winner === 1) ? 'Player 1 wins!' : (winner === 2) ? 'Player 2 wins!' : 'Tie game!';
 
-if (winner === 1) {
-	displayBoard(mainArray);
-	console.log('Player 1 wins!')
-}
-
-if (winner === 2) {
-	displayBoard(mainArray);
-	console.log('Player 2 wins!')
-}
-
-if (winner === 3) {
-	displayBoard(mainArray);
-	console.log('Tie game!')
-}
+console.log(winnerMsg);
