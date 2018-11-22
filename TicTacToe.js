@@ -66,24 +66,25 @@ for (let counter = 0; ;) {
 	displayBoard(mainArray);
 
 	let badInput = true
-		do {
-			let num = readlineSync.question('Player 1, place an X on an available square (enter the square\'s number). ');
-			num = parseInt(num, 10);
-			if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
-				mainArray[num - 1] = 'X';
-				badInput = false;
-			} else {
-				console.log('You must enter an available number.');
-			}
-		} while (badInput);
-
-		counter++;
-		if (counter >= 5) { // there might be a winner
-			winner = gameOverChecker(mainArray);
-			if (winner !== 0) { // game is over
-				break;
-			}
+		
+	do {
+		let num = readlineSync.question('Player 1, place an X on an available square (enter the square\'s number). ');
+		num = parseInt(num, 10);
+		if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
+			mainArray[num - 1] = 'X';
+			badInput = false;
+		} else {
+			console.log('You must enter an available number.');
 		}
+	} while (badInput);
+
+	counter++;
+	if (counter >= 5) { // there might be a winner
+		winner = gameOverChecker(mainArray);
+		if (winner !== 0) { // game is over
+			break;
+		}
+	}
 
 
 	//Player 2's turn
@@ -91,24 +92,25 @@ for (let counter = 0; ;) {
 	displayBoard(mainArray);
 
 	badInput = true
-		do {
-			let num = readlineSync.question('Player 2, place an O on an available square (enter the square\'s number). ');
-			num = parseInt(num, 10);
-			if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
-				mainArray[num - 1] = 'O';
-				badInput = false;
-			} else {
-				console.log('You must enter an available number.');
-			}
-		} while (badInput);
-
-		counter++;
-		if (counter >= 5) { // there might be a winner
-			winner = gameOverChecker(mainArray);
-			if (winner !== 0) { // game is over
-				break;
-			}
+		
+	do {
+		let num = readlineSync.question('Player 2, place an O on an available square (enter the square\'s number). ');
+		num = parseInt(num, 10);
+		if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
+			mainArray[num - 1] = 'O';
+			badInput = false;
+		} else {
+			console.log('You must enter an available number.');
 		}
+	} while (badInput);
+
+	counter++;
+	if (counter >= 5) { // there might be a winner
+		winner = gameOverChecker(mainArray);
+		if (winner !== 0) { // game is over
+			break;
+		}
+	}
 }
 
 if (winner === 1) {
