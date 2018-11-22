@@ -1,8 +1,13 @@
 const readlineSync = require('./node_modules/readline-sync');
 
 
-let mainArray = ['', '', '', '', '', '', '', '', ''];
-let numberArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+let mainArray = [];
+let numberArray = [];
+
+for (let i = 1; i < 10; i++) {
+    mainArray.push('');
+    numberArray.push(`${i}`);
+}
 
 function displayBoard(mainArray, numberArray) {
 
@@ -54,9 +59,16 @@ function gameOverChecker(mainArray) {
 let winner = 0;
 
 
-for (let counter = 0; ;) {
+for (let counter = 0; ; counter++) {
 
 	displayBoard(mainArray, numberArray);
+
+    if (counter >= 5) { // there might be a winner
+        winner = gameOverChecker(mainArray);
+        if (winner !== 0) { // game is over
+            break;
+        }
+    }
 
 	let playerTurn = (counter % 2 === 0) ? '1' : '2';
 	let marker = (playerTurn === '1') ? 'X' : 'O';
@@ -73,16 +85,8 @@ for (let counter = 0; ;) {
 			console.log('You must enter an available number.');
 		}
 	} while (badInput);
-
-	counter++;
-	if (counter >= 5) { // there might be a winner
-		winner = gameOverChecker(mainArray);
-		if (winner !== 0) { // game is over
-            displayBoard(mainArray, numberArray);
-			break;
-		}
-	}
 }
+
 
 let winnerMsg = (winner === 1) ? 'Player 1 wins!' : (winner === 2) ? 'Player 2 wins!' : 'Tie game!';
 
