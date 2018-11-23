@@ -1,22 +1,14 @@
 const readlineSync = require('./node_modules/readline-sync');
 
+let mainArray = [];
+let displayArray = [];
 
-let mainArray = ['', '', '', '', '', '', '', '', ''];
+for (let i = 1; i <= 9; i++) {
+    mainArray.push('');
+    displayArray.push(`${i}`);
+}
 
-
-function displayBoard(mainArray) {
-	
-	let square1 = (mainArray[0]) ? mainArray[0] : '1';
-	let square2 = (mainArray[1]) ? mainArray[1] : '2';
-	let square3 = (mainArray[2]) ? mainArray[2] : '3';
-	let square4 = (mainArray[3]) ? mainArray[3] : '4';
-	let square5 = (mainArray[4]) ? mainArray[4] : '5';
-	let square6 = (mainArray[5]) ? mainArray[5] : '6';
-	let square7 = (mainArray[6]) ? mainArray[6] : '7';
-	let square8 = (mainArray[7]) ? mainArray[7] : '8';
-	let square9 = (mainArray[8]) ? mainArray[8] : '9';
-
-	let displayArray = [square1, square2, square3, square4, square5, square6, square7, square8, square9];
+function displayBoard(displayArray) {
 
 	console.log(' ' + displayArray[0] + ' | ' + displayArray[1] + ' | ' + displayArray[2] + ' ');
 	console.log('\u2014\u2014\u2014|\u2014\u2014\u2014|\u2014\u2014\u2014');
@@ -59,69 +51,36 @@ function gameOverChecker(mainArray) {
 let winner = 0;
 
 
-for (let counter = 0; ;) {
+for (let counter = 0; ; counter++) {
 
-	// Player 1's turn
+	displayBoard(displayArray);
 
-	displayBoard(mainArray);
+    if (counter >= 5) { // there might be a winner
+        winner = gameOverChecker(mainArray);
+        if (winner !== 0) { // game is over
+            break;
+        }
+    }
+
+	let playerTurn = (counter % 2 === 0) ? '1' : '2';
+	let marker = (playerTurn === '1') ? 'X' : 'O';
 
 	let badInput = true
-		do {
-			let num = readlineSync.question('Player 1, place an X on an available square (enter the square\'s number). ');
-			num = parseInt(num, 10);
-			if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
-				mainArray[num - 1] = 'X';
-				badInput = false;
-			} else {
-				console.log('You must enter an available number.');
-			}
-		} while (badInput);
 
-		counter++;
-		if (counter >= 5) { // there might be a winner
-			winner = gameOverChecker(mainArray);
-			if (winner !== 0) { // game is over
-				break;
-			}
+	do {
+		let num = readlineSync.question('Player ' + playerTurn + ', place an ' + marker + ' on an available square (enter the square\'s number). ');
+		num = parseInt(num, 10);
+		if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
+			mainArray[num - 1] = marker;
+            displayArray[num - 1] = marker;
+			badInput = false;
+		} else {
+			console.log('You must enter an available number.');
 		}
-
-
-	//Player 2's turn
-
-	displayBoard(mainArray);
-
-	badInput = true
-		do {
-			let num = readlineSync.question('Player 2, place an O on an available square (enter the square\'s number). ');
-			num = parseInt(num, 10);
-			if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
-				mainArray[num - 1] = 'O';
-				badInput = false;
-			} else {
-				console.log('You must enter an available number.');
-			}
-		} while (badInput);
-
-		counter++;
-		if (counter >= 5) { // there might be a winner
-			winner = gameOverChecker(mainArray);
-			if (winner !== 0) { // game is over
-				break;
-			}
-		}
+	} while (badInput);
 }
 
-if (winner === 1) {
-	displayBoard(mainArray);
-	console.log('Player 1 wins!')
-}
 
-if (winner === 2) {
-	displayBoard(mainArray);
-	console.log('Player 2 wins!')
-}
+let winnerMsg = (winner === 1) ? 'Player 1 wins!' : (winner === 2) ? 'Player 2 wins!' : 'Tie game!';
 
-if (winner === 3) {
-	displayBoard(mainArray);
-	console.log('Tie game!')
-}
+console.log(winnerMsg);
