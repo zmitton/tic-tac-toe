@@ -5,11 +5,11 @@ let displayArray = [];
 
 for (let i = 1; i <= 9; i++) {
     mainArray.push('');
-    displayArray.push(`${i}`);
+    displayArray.push('\x1b[2m' + i.toString() + '\x1b[0m');
 }
 
 function displayBoard(displayArray) {
-
+	process.stdout.write('\033c\033[3J');
 	console.log(' ' + displayArray[0] + ' | ' + displayArray[1] + ' | ' + displayArray[2] + ' ');
 	console.log('\u2014\u2014\u2014|\u2014\u2014\u2014|\u2014\u2014\u2014');
 	console.log(' ' + displayArray[3] + ' | ' + displayArray[4] + ' | ' + displayArray[5] + ' ');
