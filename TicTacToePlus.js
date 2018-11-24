@@ -1,6 +1,8 @@
 const readlineSync = require('./node_modules/readline-sync');
 
+
 // user sets size of board
+
 let numRows;
 
 let invalidInput = true;
@@ -69,86 +71,85 @@ function displayBoard(displayArray, numRows, totalSquares, fillerRow) {
 
 
 
-function gameOverChecker(mainArray, numRows, totalSquares) {
-	// check columns
-	for (let i = 0; i < numRows; i++) {
-		if (mainArray[i]) {
-			for (let j = 0; ; j += numRows) {
-				if (mainArray[i+j] !== mainArray[i+j+numRows]) { // no winner in this column
+function winnerChecker(mainArray, numRows, totalSquares) {
+	
+	function rowAndColumnChecker(mainArray, iLessThan, iAdder, jAdder, finalAdder) {
+		for (let i = 0; i < iLessThan; i += iAdder) {
+			if (mainArray[i]) {
+				for (let j = 0; ; j += jAdder) {
+					if (mainArray[i+j] !== mainArray[i+j+jAdder]) { // no winner, try next row/column
+						break;
+					}
+					if (i+j+(2*jAdder) === i + finalAdder) { // winner
+						return (mainArray[i] === 'X') ? 1 : 2;
+					}
+				}
+			}
+		}
+	}
+
+	function diagonalChecker(mainArray, startingCorner, firstAdder, secondAdder) {
+		if (mainArray[startingCorner]) {
+			for (let i = startingCorner; ; i += firstAdder + secondAdder) {
+				if (mainArray[startingCorner] !== mainArray[i]) { // no winner
 					break;
 				}
-				if (i+j+(2*numRows) > totalSquares) { // winner
+				if (i + firstAdder === totalSquares) { // winner
 					return (mainArray[i] === 'X') ? 1 : 2;
 				}
 			}
 		}
+	}
+
+	// check columns
+	let columnWinner = rowAndColumnChecker(mainArray, numRows, 1, numRows, totalSquares);
+	if (columnWinner) {
+		return columnWinner;
 	}
 
 	// check rows
-	for (let i = 0; i < totalSquares; i += numRows) {
-		if (mainArray[i]) {
-			for (let j = 0; ; j++) {
-				if (mainArray[i+j] !== mainArray[i+j+1]) { // no winner in this row
-					break;
-				}
-				if (i+j+2 === i + numRows) { // winner
-					return (mainArray[i] === 'X') ? 1 : 2;
-				}
-			}
-		}
+	let rowWinner = rowAndColumnChecker(mainArray, totalSquares, numRows, 1, numRows);
+	if (rowWinner) {
+		return rowWinner;
 	}
 
 	// check first diagonal
-	if (mainArray[0]) {
-		for (let i = 0; ; i += numRows + 1) {
-			if (mainArray[0] !== mainArray[i]) { // no winner
-				break;
-			}
-			if (i+1 === totalSquares) { // winner
-				return (mainArray[i] === 'X') ? 1 : 2;
-			}
-		}
+	let firstDiagonalWinner = diagonalChecker(mainArray, 0, 1, numRows);
+	if (firstDiagonalWinner) {
+		return firstDiagonalWinner;
 	}
 
 	// check second diagonal
-	if (mainArray[numRows-1]) {
-		for (let i = numRows-1; ; i += numRows - 1) {
-			if (mainArray[numRows-1] !== mainArray[i]) { // no winner
-				break;
-			}
-			if (i + numRows === totalSquares) { // winner
-				return (mainArray[i] === 'X') ? 1 : 2;
-			}
-		}
+	let secondDiagonalWinner = diagonalChecker(mainArray, numRows - 1, numRows, -1);
+	if (secondDiagonalWinner) {
+		return secondDiagonalWinner;
 	}
-
-	return 0; // game isn't over yet
 }
 
 
-let winner = 0;
 
+// the game
 
-for (let counter = 0; ; counter++) {
+let winner;
+
+for (let turnsTaken = 0; ; turnsTaken++) {
 
 	displayBoard(displayArray, numRows, totalSquares, fillerRow);
 
-  if (counter >= numRows + (numRows - 1)) { // there might be a winner
-    winner = gameOverChecker(mainArray, numRows, totalSquares);
-      if (winner !== 0) { // there's a winner
+  if (turnsTaken >= (2*numRows) - 1) { // there might be a winner
+    winner = winnerChecker(mainArray, numRows, totalSquares);
+      if (winner) { // there's a winner
         break;
       }
   }
-  if (counter === totalSquares) { // tie game
-    winner = 3;
+  if (turnsTaken === totalSquares) { // tie game (board is full, no winner)
     break;
   }
 
-	let playerTurn = (counter % 2 === 0) ? '1' : '2';
+	let playerTurn = (turnsTaken % 2 === 0) ? '1' : '2';
 	let marker = (playerTurn === '1') ? 'X' : 'O';
 
 	let badInput = true
-
 	do {
 		let num = readlineSync.question('Player ' + playerTurn + ', place an ' + marker + ' on an available square (enter the square\'s number). ');
 		num = parseInt(num, 10);
@@ -162,7 +163,10 @@ for (let counter = 0; ; counter++) {
 	} while (badInput);
 }
 
-console.log(winner);
+
+
+// announce the results
+
 let winnerMsg = (winner === 1) ? 'Player 1 wins!' : (winner === 2) ? 'Player 2 wins!' : 'Tie game!';
 
 console.log(winnerMsg);
