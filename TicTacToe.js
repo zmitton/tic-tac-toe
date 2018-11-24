@@ -72,7 +72,7 @@ for (let counter = 0; ; counter++) {
 		num = parseInt(num, 10);
 		if (num && num >= 1 && num <= 9 && !mainArray[num - 1]) {
 			mainArray[num - 1] = marker;
-            displayArray[num - 1] = marker;
+			displayArray[num - 1] = marker;
 			badInput = false;
 		} else {
 			console.log('You must enter an available number.');
